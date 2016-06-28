@@ -29,15 +29,23 @@ use Phalcon\Mvc\User\Plugin;
 
 class CORS extends Plugin
 {
-    protected $whitelist = array();
+    protected $dev          = false;
+    protected $origin       = '*';
+    protected $whitelist    = array();
 
-    public function __construct(array $whitelist)
+    public function __construct(array $whitelist, $dev=false)
     {
-        $this->whitelist = $whitelist;
+        $this->dev          = $dev;
+        $this->whitelist    = $whitelist;
     }
 
     public function beforeExecuteRoute(Event $event, Dispatcher $dispatcher)
     {
+        if (!$this->checkOrigin()) {
+            $this->response->send();
+            return false;
+        }
+
         if ($this->request->isOptions()) {
             $this->setupOptions();
             return false;
@@ -46,14 +54,23 @@ class CORS extends Plugin
         return true;
     }
 
-    protected function setupOptions()
+    protected function checkOrigin()
     {
-        $origin = $this->request->getHeader("Origin");
-        if (!in_array($origin, $this->whitelist)) {
-            $this->response->send();
-            return;
+        if ($this->dev === true) {
+            return true;
         }
 
+        $origin         = $this->request->getHeader("Origin");
+        if (!in_array($origin, $this->whitelist)) {
+            return false;
+        }
+
+        $this->origin   = $origin;
+        return true;
+    }
+
+    protected function setupHeaders()
+    {
         $this->response->setHeader("Access-Control-Allow-Credentials", 'true');
         $this->response->setHeader(
             "Access-Control-Allow-Headers",
@@ -63,17 +80,22 @@ class CORS extends Plugin
             "Access-Control-Allow-Methods",
             "GET, PATCH, PUT, POST, DELETE, OPTIONS"
         );
-        $this->response->setHeader("Access-Control-Allow-Origin", $origin);
+        $this->response->setHeader("Access-Control-Allow-Origin", $this->origin);
         $this->response->setHeader(
             "Content-Type", "application/json; charset=UTF-8"
         );
+    }
 
-        $this->response->setJsonContent(
-            array(
-                "status"    => 200,
-                "message"   => "OK",
-            )
-        );
+    protected function setupOptions()
+    {
+        $this->setupHeaders();
+
+        $content            = array();
+        $content["status"]  = 200;
+        $content["message"] = "OK";
+
+        $this->response->setJsonContent($content);
+
         $this->response->setStatusCode(200, "OK");
         $this->response->send();
     }
