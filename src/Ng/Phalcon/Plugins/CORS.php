@@ -46,6 +46,8 @@ class CORS extends Plugin
             return false;
         }
 
+        $this->setupHeaders();
+
         if ($this->request->isOptions()) {
             $this->setupOptions();
             return false;
@@ -88,8 +90,6 @@ class CORS extends Plugin
 
     protected function setupOptions()
     {
-        $this->setupHeaders();
-
         $content            = array();
         $content["status"]  = 200;
         $content["message"] = "OK";
