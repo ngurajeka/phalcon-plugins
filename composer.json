@@ -1,0 +1,23 @@
+{
+    "name": "ngurajeka/phalcon-plugins",
+    "description": "Phalcon Plugins",
+    "type": "library",
+    "version": "1.0",
+    "require": {
+        "php": ">=5.4.0",
+        "ext-phalcon": "^2.0"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Ady Rahmat MA",
+            "email": "ngurajeka.92@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-0": {
+            "Ng\\Phalcon": "src"
+        }
+    }
+}
