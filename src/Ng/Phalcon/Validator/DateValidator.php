@@ -13,6 +13,7 @@
 namespace Ng\Phalcon\Validator;
 
 
+use Phalcon\Validation;
 use Phalcon\Validation\Validator;
 use Phalcon\Validation\ValidatorInterface;
 
@@ -32,7 +33,7 @@ class DateValidator extends Validator implements ValidatorInterface
 
     protected $defaultFormat = "d-m-y";
 
-    public function validate($validator, $attribute)
+    public function validate(Validation $validator, $attribute)
     {
         if ($this->getOption('format')) {
             $format = $this->getOption('format');
