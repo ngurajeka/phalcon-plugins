@@ -58,16 +58,19 @@ class CORS extends Plugin
 
     protected function checkOrigin()
     {
+        $origin = $this->request->getHeader("Origin");
         if ($this->dev === true) {
+            if (!empty($origin)) {
+                $this->origin = $origin;
+            }
             return true;
         }
 
-        $origin         = $this->request->getHeader("Origin");
         if (!in_array($origin, $this->whitelist)) {
             return false;
         }
 
-        $this->origin   = $origin;
+        $this->origin = $origin;
         return true;
     }
 
