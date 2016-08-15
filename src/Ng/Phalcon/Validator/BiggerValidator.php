@@ -43,12 +43,12 @@ class BiggerValidator extends Validator implements ValidatorInterface
         }
 
         if (!$this->getOption('biggerThan')) {
-            $this->addMessage($attribute);
+            $this->addMessage($validator, $attribute);
             return false;
         }
 
         if (!is_string($this->getOption('biggerThan'))) {
-            $this->addMessage($attribute);
+            $this->addMessage($validator, $attribute);
             return false;
         }
 
@@ -56,12 +56,12 @@ class BiggerValidator extends Validator implements ValidatorInterface
         $compared   = $validator->getValue($this->getOption('biggerThan'));
         if ($this->useBiggerEquals) {
             if ($value <= $compared) {
-                $this->addMessage($attribute);
+                $this->addMessage($validator, $attribute);
                 return false;
             }
         } else {
             if ($value < $compared) {
-                $this->addMessage($attribute);
+                $this->addMessage($validator, $attribute);
                 return false;
             }
         }
@@ -78,7 +78,7 @@ class BiggerValidator extends Validator implements ValidatorInterface
         return 'Invalid Input';
     }
 
-    protected function addMessage($attr)
+    protected function addMessage(Validation &$validator, $attr)
     {
         $validator->appendMessage(
             new \Phalcon\Validation\Message($this->getOptionMessage(), $attr, self::VAL_TYPE)
