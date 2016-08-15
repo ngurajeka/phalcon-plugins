@@ -42,18 +42,13 @@ class BiggerValidator extends Validator implements ValidatorInterface
             }
         }
 
-        if (!$this->getOption('biggerThan')) {
-            $this->addMessage($validator, $attribute);
-            return false;
-        }
-
-        if (!is_string($this->getOption('biggerThan'))) {
+        if (is_null($this->getOption('biggerThan'))) {
             $this->addMessage($validator, $attribute);
             return false;
         }
 
         $value      = $validator->getValue($attribute);
-        $compared   = $validator->getValue($this->getOption('biggerThan'));
+        $compared   = $this->getOption('biggerThan');
         if ($this->useBiggerEquals) {
             if ($value <= $compared) {
                 $this->addMessage($validator, $attribute);
