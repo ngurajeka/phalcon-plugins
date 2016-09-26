@@ -41,6 +41,7 @@ class CORS extends Plugin
 
     public function beforeExecuteRoute(Event $event, Dispatcher $dispatcher)
     {
+		$this->view->disable();
         if (!$this->checkOrigin()) {
             $this->response->send();
             return false;
